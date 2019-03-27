@@ -166,8 +166,8 @@ namespace ImagePacker
                 sb.Append(s.DestRect.Width);
                 sb.Append("\" height=\"");
                 sb.Append(s.DestRect.Height);
-
-                if( s.DestRect.Width != s.Dimentions.X )
+                
+                if( s.DestRect.Width != s.Dimentions.X || s.DestRect.Height != s.Dimentions.Y )
                 {
                     sb.Append("\" frameX=\"");
                     sb.Append(-(int)Math.Round(s.ColoredRect.X * atlas.Scale));
