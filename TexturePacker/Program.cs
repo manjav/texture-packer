@@ -37,7 +37,7 @@ namespace ImagePacker
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            var imgs = Directory.GetFiles(_source, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png") || s.EndsWith(".tif")).ToList();
+            var imgs = Directory.GetFiles(_source, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png") || s.EndsWith(".PNG") || s.EndsWith(".tif") || s.EndsWith(".TIF")).ToList();
             var atlas = new Atlas(_width, _height, _scale);
             Console.WriteLine("loading images ...");
             var prefix = _source.Length + 1;
