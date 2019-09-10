@@ -15,9 +15,9 @@ namespace ImagePacker
         public Rectangle DestRect;
         public Rectangle ColoredRect;
 
-        public Slice(string path, int prefix, bool trimmed, float scale)
+        public Slice(string path, string prifix, int folderNameLen, bool trimmed, float scale)
         {
-            Name = path.Substring(prefix, path.Length - prefix - 4).Replace('\\', '/');
+            Name = prifix + path.Substring(folderNameLen, path.Length - folderNameLen - 4).Replace('\\', '/');
             Bitmap = (Bitmap)Image.FromFile(path);
 
             if( trimmed )

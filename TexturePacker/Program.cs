@@ -16,6 +16,7 @@ namespace ImagePacker
             string _atlasImage = "atlas.png";
             string _atlasData = "atlas.xml";
             string _source = "images";
+            string _prefix = "";
             bool _trim = true;
             int _packing  = 1;
             bool _removeDuplicates = true;
@@ -26,6 +27,7 @@ namespace ImagePacker
                 switch( args[i] )
                 {
                     case "-atlas":  _atlasImage = args[i + 1]; break;
+                    case "-prefix": _prefix = args[i + 1]; break;
                     case "-data":   _atlasData = args[i + 1]; break;
                     case "-source": _source = args[i + 1]; break;
                     case "-width":  _width = int.Parse(args[i + 1]); break;
@@ -42,9 +44,9 @@ namespace ImagePacker
             var imgs = Directory.GetFiles(_source, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".png") || s.EndsWith(".PNG") || s.EndsWith(".tif") || s.EndsWith(".TIF")).ToList();
             var atlas = new Atlas(_width, _height, _scale);
             Console.WriteLine("loading images ...");
-            var prefix = _source.Length + 1;
+            var folderNameLen = _source.Length + 1;
             foreach (var i in imgs)
-                atlas.Add(item: new Slice(i, prefix, _trim, atlas.Scale));
+                atlas.Add(item: new Slice(i, _prefix, folderNameLen, _trim, atlas.Scale));
 
             Console.WriteLine("subtextures created " + stopwatch.ElapsedMilliseconds + " ms.");
             Engine.Sort(atlas);
