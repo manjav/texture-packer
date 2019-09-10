@@ -21,7 +21,7 @@ namespace ImagePacker
             return y.Area - x.Area;
         }
 
-        static public Bitmap Pack(Atlas atlas, bool removeDuplicates)
+        static public Bitmap Pack(Atlas atlas, bool removeDuplicates, int packing)
         {
             tileMap = new bool[atlas.Width, atlas.Height];
             var atlasLen = atlas.Count;
@@ -43,7 +43,7 @@ namespace ImagePacker
                         }
                     }
 
-                    s.DestRect = FindEmptyPoint(atlas, s.DestRect);
+                    s.DestRect = FindEmptyPoint(atlas, s.DestRect, packing);
                     if( s.DestRect.X < 0 )
                     {
                         Console.WriteLine(s.Name + " " + s.ColoredRect + " not fit in atlas");
@@ -79,10 +79,34 @@ namespace ImagePacker
             return null;
         }
         static Dictionary<string, int> passeds = new Dictionary<string, int>();
-        static Rectangle FindEmptyPoint(Atlas atlas, Rectangle rect)
+        static Point lastReadyPoint = new Point();
+        static int tileH = 0;
+        static Rectangle FindEmptyPoint(Atlas atlas, Rectangle rect, int packing)
         {
             int w = rect.Width + 1;
             int h = rect.Height + 1;
+            if (packing == 0 && lastReadyPoint.Y < atlas.Height)
+            {
+                //Console.WriteLine(lastReadyPoint.X + " " + rect.Width + " " + atlas.Width);
+                if (lastReadyPoint.X + rect.Width >= atlas.Width)
+                {
+                    lastReadyPoint.X = 0;
+                    lastReadyPoint.Y += tileH;
+                    tileH = 0;
+                    while (lastReadyPoint.Y < atlas.Height && tileMap[lastReadyPoint.X, lastReadyPoint.Y])
+                        lastReadyPoint.Y++;
+                }
+                if (lastReadyPoint.Y + rect.Height < atlas.Height)
+                {
+                    FillMap(lastReadyPoint.X, lastReadyPoint.Y, lastReadyPoint.X + w, lastReadyPoint.Y + h);
+                    rect.X = lastReadyPoint.X;
+                    rect.Y = lastReadyPoint.Y;
+                    lastReadyPoint.X += w;
+                    tileH = Math.Max(tileH, h);
+                    return rect;
+                }
+            }
+
             string key = w + "x" + h;
             bool exists = passeds.ContainsKey(key);
             for (int j = exists ? passeds[key] : 0 ; j < atlas.Height;  j++)
@@ -184,7 +208,6 @@ namespace ImagePacker
 
                 sb.Append("\"/>");
             }
-
 
             sb.Append("\n</TextureAtlas>");
             return sb.ToString();

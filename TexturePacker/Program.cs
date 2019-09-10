@@ -17,6 +17,7 @@ namespace ImagePacker
             string _atlasData = "atlas.xml";
             string _source = "images";
             bool _trim = true;
+            int _packing  = 1;
             bool _removeDuplicates = true;
             for ( var i = 0;  i < args.Length; i++ )
             {
@@ -24,13 +25,14 @@ namespace ImagePacker
                     continue;
                 switch( args[i] )
                 {
-                    case "-atlas": _atlasImage = args[i + 1]; break;
-                    case "-data": _atlasData = args[i + 1]; break;
+                    case "-atlas":  _atlasImage = args[i + 1]; break;
+                    case "-data":   _atlasData = args[i + 1]; break;
                     case "-source": _source = args[i + 1]; break;
                     case "-width":  _width = int.Parse(args[i + 1]); break;
                     case "-height": _height = int.Parse(args[i + 1]); break;
-                    case "-scale": _scale = float.Parse(args[i + 1]); break;
-                    case "-trim": _trim = bool.Parse(args[i + 1]); break;
+                    case "-scale":  _scale = float.Parse(args[i + 1]); break;
+                    case "-trim":   _trim = bool.Parse(args[i + 1]); break;
+                    case "-packing":_packing = int.Parse(args[i + 1]); break;
                     case "-removeDuplicates": _removeDuplicates = bool.Parse(args[i + 1]); break;
                 }
             }
@@ -48,7 +50,7 @@ namespace ImagePacker
             Engine.Sort(atlas);
 
             Console.WriteLine("packing started ");
-            Bitmap atlasBMP = Engine.Pack(atlas, _removeDuplicates);
+            Bitmap atlasBMP = Engine.Pack(atlas, _removeDuplicates, _packing);
 
             Console.WriteLine(" in: " + stopwatch.ElapsedMilliseconds + " ms.");
             atlasBMP.Save(_atlasImage);
