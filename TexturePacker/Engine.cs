@@ -32,12 +32,15 @@ namespace ImagePacker
             {
                 foreach (var s in atlas)
                 {
-                    Slice same = FindSameSlice(atlas, s);
-                    if( same != null )
+                    if( removeDuplicates )
                     {
-                        s.DestRect = same.DestRect;
-                       // Console.WriteLine(s.Name + " and " + same.Name + " are the same!");
-                        continue;
+                        Slice same = FindSameSlice(atlas, s);
+                        if( same != null )
+                        {
+                            s.DestRect = same.DestRect;
+                           // Console.WriteLine(s.Name + " and " + same.Name + " are the same!");
+                            continue;
+                        }
                     }
 
                     s.DestRect = FindEmptyPoint(atlas, s.DestRect);
